@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./User');
 
 const pointSchema = new mongoose.Schema({
     type: {
@@ -23,4 +22,4 @@ const groupSchema = new mongoose.Schema({
     creator: { type: String, required: true }
 })
 
-module.exports = mongoose.model('Group', groupSchema)
+module.exports = mongoose.model('Group', groupSchema);

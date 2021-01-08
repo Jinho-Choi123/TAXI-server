@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Group = require('../../models/Group');
+const Chat = require('../../models/Chat');
 
 const createGroupMiddleware = (req, res, next) => {
     /*
@@ -38,11 +39,19 @@ const createGroupMiddleware = (req, res, next) => {
         creator: creator
     })
 
+    const chat = new Chat({
+        roomId: groupid,
+        content: []
+    })
+
     group.createIndex()
 
     group.save()
         .then(() => {
-            res.send({ msg: "Creating Group success!!" });
+            chat.save()
+                .then(() => {
+                    res.send({ msg: "Creating Group success!!" });
+                })
         })
         .catch((err) => {
             throw err;

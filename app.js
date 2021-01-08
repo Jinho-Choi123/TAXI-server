@@ -11,17 +11,58 @@ const authRouter = require('./routes/auth');
 const groupRouter = require('./routes/group');
 
 const app = express();
+const server = require('http').createServer(app);
+const io = require("socket.io")(server);
 
 const PORT = 8080;
+const CHAT_PORT = 8081;
 const cors = require('cors');
 
 //connect to mongodb
 const db = require('./db/db');
 db();
 
+
+
 //allow frontend CORS policy
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(cors({ origin: "http://192.249.18.243:3000" }));
+
+//Socket IO Connection with Client
+const Chat = require('./models/Chat');
+
+io.on('connection', (socket) => {
+    console.log("user connected");
+    //socket.broadcast.emit('hi');
+    socket.on('join:room', (data) => {
+        socket.join('room' + data.roomId);
+    });
+
+    socket.on('send:message', async(data) => {
+        /*
+        data: {
+            msg: " ",
+            userId: " ",
+            roomId: " "
+        }
+        */
+        const msg = data.message;
+        const sender = data.userId;
+        const timestamp = Date.now();
+        const chat_message = {
+            message: msg,
+            sender: sender,
+            timestamp: timestamp
+        }
+        await Chat.updateOne({ roomId: data.roomId }, { $push: { content: chat_message } })
+
+        io.socket.in('room' + data.roomId).emit('send:message', data.message);
+    });
+
+    socket.on('disconnect', () => {
+        console.log("user disconnected");
+    })
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -56,4 +97,8 @@ app.listen(PORT, () => {
     console.log(`Node Server Running at PORT: ${PORT}`);
 })
 
-module.exports = app;
+server.listen(CHAT_PORT, () => {
+    console.log(`Socket IO Server Running at PORT: ${CHAT_PORT}`);
+})
+
+module.exports = { app, io };
