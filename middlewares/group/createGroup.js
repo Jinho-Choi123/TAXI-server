@@ -38,9 +38,14 @@ const createGroupMiddleware = (req, res, next) => {
         creator: creator
     })
 
+    group.createIndex()
+
     group.save()
         .then(() => {
             res.send({ msg: "Creating Group success!!" });
+        })
+        .catch((err) => {
+            throw err;
         })
 
 }

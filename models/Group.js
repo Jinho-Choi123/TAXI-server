@@ -16,8 +16,8 @@ const pointSchema = new mongoose.Schema({
 
 const groupSchema = new mongoose.Schema({
     groupId: { type: String, required: true, unique: true },
-    startPoint: { type: pointSchema, required: true },
-    endPoint: { type: pointSchema, required: true },
+    startPoint: { type: pointSchema, required: true, index: "2dsphere" },
+    endPoint: { type: pointSchema, required: true, index: "2dsphere" },
     time: { type: Date, required: true },
     members: [String], // array of userId
     creator: { type: String, required: true }
