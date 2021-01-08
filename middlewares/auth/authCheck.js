@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const User = require('../../models/user');
+const User = require('../../models/User');
 
 const authcheckMiddleware = (req, res, next) => {
     const token = req.headers['x-access-token'] || req.query.token;

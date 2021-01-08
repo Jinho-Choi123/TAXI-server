@@ -7,9 +7,8 @@ const logger = require('morgan');
 const dotenv = require('dotenv');
 dotenv.config({ path: '/home/ubuntu/LSM-server/.env' });
 
-const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth')
-const teacherRouter = require('./routes/teacher')
+const authRouter = require('./routes/auth');
+const groupRouter = require('./routes/group');
 
 const app = express();
 
@@ -21,8 +20,8 @@ const db = require('./db/db');
 db();
 
 //allow frontend CORS policy
-app.use(cors({origin: "http://localhost:3000"}));
-app.use(cors({origin: "http://192.249.18.243:3000"}));
+app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: "http://192.249.18.243:3000" }));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,7 +34,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authRouter);
-app.use('/teacher', teacherRouter)
+app.use('/group', groupRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 var express = require('express');
 var router = express.Router();
-const User = require('../../models/user');
+const User = require('../../models/User');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -15,14 +15,13 @@ const verify = (password, hash) => {
 const loginMiddleware = (req, res, next) => {
     console.log("got auth login request");
     const userid = req.body.userId;
-    const isteacher = req.body.isTeacher;
     const userpassword = req.body.userPassword;
     console.log(userid);
     console.log(userpassword);
 
     const check = (data) => {
         if (data == null) {
-            res.send({ msg: "No such ID or PASSWORD" });
+            res.send({ msg: "No such ID or PASSWORD", success: false });
             return;
         } else {
             if (verify(userpassword.toString('base64'), data.userPassword.toString('base64'))) {
@@ -31,7 +30,7 @@ const loginMiddleware = (req, res, next) => {
                 const p = new Promise((resolve, reject) => {
                     jwt.sign({
                             userId: userid,
-                            isTeacher: isteacher
+                            isTeacher: data.isteacher
                         },
                         process.env.JWT_SECRET, {
                             expiresIn: '24h',
@@ -47,7 +46,10 @@ const loginMiddleware = (req, res, next) => {
                 return p;
             } else {
                 console.log("hellllllllllllllllo");
-                throw new Error('login failed');
+                res.status(201).json({
+                    msg: "login failed",
+                    success: false
+                })
             }
         }
     }
@@ -56,17 +58,20 @@ const loginMiddleware = (req, res, next) => {
     const respond = (token) => {
         res.json({
             msg: 'logged in successfully',
-            token
+            success: true,
+            jwt: token
         })
     }
 
     const onError = (err) => {
         res.status(403).json({
-            msg: err.message
+            msg: err.message,
+            success: false
+
         })
     }
 
-    User.findOne({ userId: userid, isTeacher: isteacher })
+    User.findOne({ userId: userid })
         .then(check)
         .then(respond)
         .catch(onError)
