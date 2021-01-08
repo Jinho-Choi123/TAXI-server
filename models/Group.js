@@ -19,7 +19,8 @@ const groupSchema = new mongoose.Schema({
     startPoint: { type: pointSchema, required: true },
     endPoint: { type: pointSchema, required: true },
     time: { type: Date, required: true },
-    members: [String] // array of userId
+    members: [String], // array of userId
+    creator: { type: String, required: true }
 })
 
 module.exports = mongoose.model('Group', groupSchema)

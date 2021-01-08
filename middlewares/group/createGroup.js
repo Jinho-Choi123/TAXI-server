@@ -27,13 +27,15 @@ const createGroupMiddleware = (req, res, next) => {
     const startpoint = req.body.startPoint;
     const endpoint = req.body.endPoint;
     const member = [req.body.userId];
+    const creator = req.body.userId;
 
     const group = new Group({
         groupId: groupid,
         startPoint: startpoint,
         endPoint: endpoint,
         time: time,
-        members: member
+        members: member,
+        creator: creator
     })
 
     group.save()
