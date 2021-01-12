@@ -8,7 +8,8 @@ const messageSchema = new mongoose.Schema({
 
 const chatSchema = new mongoose.Schema({
     roomId: { type: String },
-    content: [messageSchema]
+    content: [messageSchema],
+    members: { type: [String], required: true }
 })
 
-module.exports = mongoose.model('Chat', chatSchema)
+module.exports = mongoose.model('Chat', chatSchema);

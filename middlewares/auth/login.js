@@ -7,8 +7,6 @@ const jwt = require('jsonwebtoken');
 
 const verify = (password, hash) => {
     const hash_ = crypto.pbkdf2Sync(password, (process.env.PASSWORD_HASH_SALT).toString('base64'), 90194, 64, 'sha512').toString('base64');
-    console.log(hash + "\n");
-    console.log(hash_ + "\n");
     return hash_ === hash;
 }
 
@@ -19,22 +17,18 @@ const loginMiddleware = (req, res, next) => {
         userPassword: " "
     }
      */
-    console.log("got auth login request");
     const userid = req.body.userId;
     const userpassword = req.body.userPassword;
-    console.log(req);
 
     const check = (data) => {
         if (data == null) {
             res.send({ msg: "No such ID or PASSWORD", success: false });
         } else {
             if (verify(userpassword.toString('base64'), data.userPassword.toString('base64'))) {
-                console.log("gooooooooooooood");
                 //login success. 
                 return new Promise((resolve, reject) => {
                     jwt.sign({
-                            userId: userid,
-                            isTeacher: data.isteacher
+                            userId: userid
                         },
                         process.env.JWT_SECRET, {
                             expiresIn: '24h',

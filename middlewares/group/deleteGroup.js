@@ -12,7 +12,7 @@ const deleteGroupMiddleware = (req, res, next) => {
     const groupid = req.body.groupId;
     const userid = req.body.userId;
 
-    Group.findOneAndDelete({ groupId: groupid, creator: userid }, (err, data) => {
+    Group.updateOne({ groupId: groupid }, { $pull: { members: userid }, $inc: { member_num: -1 } }, (err, data) => {
         if (err) {
             console.log(err)
             res.status(400).json({
@@ -20,7 +20,7 @@ const deleteGroupMiddleware = (req, res, next) => {
             })
         } else {
             res.json({
-                msg: "Group Deleted"
+                msg: "Leaved Group"
             })
         }
     })

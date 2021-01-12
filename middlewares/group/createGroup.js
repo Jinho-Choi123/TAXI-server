@@ -42,7 +42,8 @@ const createGroupMiddleware = (req, res, next) => {
 
     const chat = new Chat({
         roomId: groupid,
-        content: []
+        content: [],
+        members: member
     })
 
     group.save()

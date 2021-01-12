@@ -9,13 +9,11 @@ const registerMiddleware = (req, res, next) => {
     req: {
         userId: " ",
         userPassword: " ",
-        isTeacher: " ",
     }
      */
     console.log("in register middleware");
     const userid = req.body.userId;
     const userpassword = req.body.userPassword;
-    const isteacher = req.body.isTeacher;
 
     //check if userid already exists in the db
     User.findOne({ userId: userid }, (err, data) => {
@@ -32,7 +30,6 @@ const registerMiddleware = (req, res, next) => {
                         const user = new User({
                             userId: userid,
                             userPassword: key.toString('base64'),
-                            isTeacher: isteacher
                         })
                         user.save();
                     }

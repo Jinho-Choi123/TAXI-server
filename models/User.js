@@ -5,7 +5,6 @@ const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
-    isTeacher: { type: Boolean, required: true },
     userPassword: { type: String, required: true }
 })
 
